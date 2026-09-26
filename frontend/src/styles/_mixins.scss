@@ -1,0 +1,15 @@
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin transition {
+    transition: all 0.3s ease;
+}
+
+@mixin responsive-mobile {
+    @media (max-width: 768px) {
+        @content;
+    }
+}

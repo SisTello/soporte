@@ -1,0 +1,391 @@
+@use "../../styles/variables" as *;
+
+.new-request-page {
+    width: 100%;
+    max-width: none;
+
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+/* ========================================
+   ENCABEZADO
+======================================== */
+
+.page-header {
+    margin-bottom: 25px;
+
+    h1 {
+        margin: 8px 0 5px;
+
+        color: $support-dark;
+
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    p {
+        margin: 0;
+
+        color: $gray-500;
+
+        font-size: 14px;
+    }
+}
+
+
+.breadcrumb-custom {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: $gray-500;
+
+    font-size: 12px;
+
+    i {
+        font-size: 10px;
+    }
+
+    strong {
+        color: $support-blue;
+    }
+}
+
+
+/* ========================================
+   FORMULARIO
+======================================== */
+
+.request-form {
+    width: 100%;
+    max-width: none;
+}
+
+
+.form-section {
+    position: relative;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+    padding: 25px;
+
+    background: white;
+
+    border: 1px solid $gray-200;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+
+.section-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        1px solid $gray-200;
+
+    h2 {
+        margin: 0;
+
+        color: $support-dark;
+
+        font-size: 17px;
+
+        font-weight: 600;
+    }
+
+    p {
+        margin: 4px 0 0;
+
+        color: $gray-500;
+
+        font-size: 12px;
+    }
+}
+
+
+.section-icon {
+    width: 42px;
+    height: 42px;
+
+    min-width: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 18px;
+
+    &.blue {
+        background: rgba(12, 120, 189, .12);
+
+        color: $primary;
+    }
+
+    &.green {
+        background: rgba(21, 147, 54, .12);
+
+        color: $success;
+    }
+
+    &.yellow {
+        background: rgba(254, 204, 0, .18);
+
+        color: #a57f00;
+    }
+
+    &.red {
+        background: rgba(193, 23, 35, .12);
+
+        color: $danger;
+    }
+}
+
+
+/* ========================================
+   CAMPOS
+======================================== */
+
+.form-label {
+    color: $gray-700;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.required {
+    margin-left: 4px;
+
+    color: $danger;
+}
+
+
+.form-control,
+.form-select {
+    min-height: 42px;
+
+    border-color: $gray-200;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    &:focus {
+        border-color: $support-blue;
+
+        box-shadow:
+            0 0 0 .2rem rgba(12, 120, 189, .12);
+    }
+}
+
+
+textarea.form-control {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+
+.field-help {
+    margin-top: 6px;
+
+    color: $gray-500;
+
+    font-size: 11px;
+}
+
+
+/* ========================================
+   ARCHIVOS
+======================================== */
+
+.upload-box {
+    padding: 30px;
+
+    text-align: center;
+
+    border: 2px dashed $gray-200;
+
+    border-radius: 8px;
+
+    background-color: $gray-100;
+
+    i {
+        display: block;
+
+        margin-bottom: 10px;
+
+        color: $support-blue;
+
+        font-size: 32px;
+    }
+
+    strong {
+        display: block;
+
+        color: $support-dark;
+
+        font-size: 14px;
+    }
+
+    span {
+        display: block;
+
+        margin-top: 5px;
+
+        color: $gray-500;
+
+        font-size: 12px;
+    }
+
+    input {
+        max-width: 500px;
+
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    small {
+        display: block;
+
+        margin-top: 10px;
+
+        color: $gray-500;
+
+        font-size: 10px;
+    }
+}
+
+
+/* ========================================
+   BOTONES
+======================================== */
+
+.form-actions {
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 72px;
+
+    padding: 14px 30px;
+
+    background: rgba(255, 255, 255, 0.97);
+
+    border-top: 1px solid $gray-200;
+
+    box-shadow:
+        0 -4px 15px rgba(0, 0, 0, 0.06);
+
+    backdrop-filter: blur(6px);
+
+    box-sizing: border-box;
+}
+
+
+.btn-cancel {
+    min-width: 120px;
+
+    border: 1px solid $gray-200;
+
+    color: $gray-700;
+
+    &:hover {
+        background-color: $gray-200;
+    }
+}
+
+
+.btn-submit {
+    min-width: 190px;
+
+    padding: 10px 20px;
+
+    background-color: $support-blue;
+
+    border: none;
+
+    color: white;
+
+    font-weight: 600;
+
+    transition: all .25s ease;
+
+    &:hover {
+        background-color: $warning;
+
+        color: #000;
+
+        transform: translateY(-1px);
+    }
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+    .new-request-page {
+        width: 100%;
+
+        padding: 20px 15px 145px;
+    }
+
+    .request-form {
+        width: 100%;
+    }
+
+    .form-section {
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    .section-header {
+        align-items: flex-start;
+    }
+
+    .form-actions {
+        min-height: auto;
+
+        padding: 12px 15px;
+
+        flex-direction: column-reverse;
+
+        button {
+            width: 100%;
+        }
+    }
+}

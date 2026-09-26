@@ -1,0 +1,199 @@
+@use "../../styles/variables" as *;
+
+.topbar {
+
+    position: fixed;
+
+    top: 0;
+    right: 0;
+
+    left: 270px;
+
+    height: 75px;
+
+    background-color: white;
+
+    border-bottom:
+        1px solid $gray-200;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    z-index: 1000;
+
+    transition: left 0.3s ease;
+}
+
+
+.topbar-left,
+.topbar-right {
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.sidebar-toggle {
+
+    border: none;
+
+    background: transparent;
+
+    color: $support-dark;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    margin-right: 15px;
+}
+
+.sidebar-toggle:hover {
+
+    color: $support-blue;
+}
+
+
+.mobile-toggle {
+
+    display: none;
+}
+
+
+.topbar-title {
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: $support-dark;
+}
+
+
+.notification-button {
+
+    position: relative;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 20px;
+
+    color: $gray-700;
+
+    margin-right: 25px;
+}
+
+.notification-badge {
+
+    position: absolute;
+
+    top: -5px;
+    right: -7px;
+
+    width: 17px;
+    height: 17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: $danger;
+
+    color: white;
+
+    font-size: 9px;
+}
+
+
+.user-profile {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+}
+
+.user-avatar {
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    background-color: $support-blue;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.user-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    line-height: 1.2;
+
+    strong {
+
+        font-size: 13px;
+
+        color: $gray-900;
+    }
+
+    span {
+
+        font-size: 11px;
+
+        color: $gray-500;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .topbar {
+
+        left: 0;
+
+        padding: 0 15px;
+    }
+
+    .desktop-toggle {
+
+        display: none;
+    }
+
+    .mobile-toggle {
+
+        display: block;
+    }
+
+    .user-info {
+
+        display: none;
+    }
+
+    .topbar-title {
+
+        font-size: 16px;
+    }
+}
