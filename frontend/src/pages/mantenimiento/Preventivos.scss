@@ -1,0 +1,181 @@
+@use "../../styles/variables" as *;
+
+.preventivos-pagina {
+    padding: 30px;
+}
+
+.encabezado-mantenimiento {
+    margin-bottom: 25px;
+
+    span {
+        color: $support-blue;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        margin: 4px 0;
+        color: $gray-900;
+        font-size: 28px;
+    }
+
+    p {
+        margin: 0;
+        color: $gray-500;
+        font-size: 14px;
+    }
+}
+
+.preventivos-filtros {
+    padding: 15px;
+    margin-bottom: 18px;
+
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
+
+    background: $white;
+
+    > div {
+        position: relative;
+    }
+
+    i {
+        position: absolute;
+        top: 50%;
+        left: 13px;
+        transform: translateY(-50%);
+        color: $gray-500;
+    }
+
+    input {
+        width: 100%;
+        height: 42px;
+
+        padding-left: 38px;
+
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+
+        outline: none;
+    }
+}
+
+.preventivos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.preventivo-card {
+    position: relative;
+
+    display: flex;
+    gap: 15px;
+
+    padding: 20px;
+
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
+
+    background: $white;
+}
+
+.preventivo-icono {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex: 0 0 46px;
+
+    width: 46px;
+    height: 46px;
+
+    border-radius: 10px;
+
+    background: rgba(21, 147, 54, 0.1);
+    color: $success;
+
+    font-size: 20px;
+}
+
+.preventivo-contenido {
+    flex: 1;
+
+    .preventivo-codigo {
+        color: $support-blue;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    h3 {
+        margin: 3px 0;
+        color: $gray-900;
+        font-size: 16px;
+    }
+
+    p {
+        margin: 0 0 15px;
+        color: $gray-500;
+        font-size: 12px;
+    }
+}
+
+.preventivo-datos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+
+    div {
+        span {
+            display: block;
+            margin-bottom: 4px;
+
+            color: $gray-500;
+            font-size: 10px;
+        }
+
+        strong {
+            color: $gray-700;
+            font-size: 12px;
+        }
+    }
+}
+
+.preventivo-estado {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    span {
+        padding: 5px 9px;
+
+        border-radius: 20px;
+
+        background: rgba(254, 204, 0, 0.15);
+        color: #806600;
+
+        font-size: 10px;
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 900px) {
+    .preventivos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .preventivos-pagina {
+        padding: 20px 15px;
+    }
+
+    .preventivo-card {
+        flex-direction: column;
+    }
+
+    .preventivo-datos {
+        grid-template-columns: 1fr;
+    }
+}

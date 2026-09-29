@@ -6,6 +6,18 @@ import MainLayout from './layouts/MainLayout';
 import Login from './pages/auth/Login';
 import Dashboard from './pages/dashboard/Dashboard';
 import NuevaSolicitud from './pages/solicitudes/NuevaSolicitud';
+import MisSolicitudes from './pages/solicitudes/MisSolicitudes';
+import TodasSolicitudes from './pages/solicitudes/TodasSolicitudes';
+import Planificacion from './pages/mantenimiento/Planificacion';
+import Mantenimientos from './pages/mantenimiento/Mantenimientos';
+import Preventivos from './pages/mantenimiento/Preventivos';
+import Correctivos from './pages/mantenimiento/Correctivos';
+import Inventario from './pages/activos/Inventario';
+import Computadoras from './pages/activos/Computadoras';
+import EquiposBiomedicos from './pages/activos/EquiposBiomedicos';
+import Camaras from './pages/activos/Camaras';
+import Impresoras from './pages/activos/Impresoras';
+import EquiposRed from './pages/activos/EquiposRed';
 
 const SimplePage = ({ title }) => {
 
@@ -72,7 +84,7 @@ function App() {
                 path="/solicitudes/mis-solicitudes"
                 element={
                     <MainLayout>
-                        <SimplePage title="Mis solicitudes" />
+                        <MisSolicitudes />
                     </MainLayout>
                 }
             />
@@ -81,7 +93,7 @@ function App() {
                 path="/solicitudes/todas"
                 element={
                     <MainLayout>
-                        <SimplePage title="Todas las solicitudes" />
+                        <TodasSolicitudes />
                     </MainLayout>
                 }
             />
@@ -89,11 +101,12 @@ function App() {
 
             {/* Mantenimiento */}
 
+           
             <Route
                 path="/mantenimiento/planificacion"
                 element={
                     <MainLayout>
-                        <SimplePage title="Planificación" />
+                        <Planificacion />
                     </MainLayout>
                 }
             />
@@ -102,7 +115,7 @@ function App() {
                 path="/mantenimiento"
                 element={
                     <MainLayout>
-                        <SimplePage title="Mantenimientos" />
+                        <Mantenimientos />
                     </MainLayout>
                 }
             />
@@ -111,7 +124,7 @@ function App() {
                 path="/mantenimiento/preventivos"
                 element={
                     <MainLayout>
-                        <SimplePage title="Mantenimientos preventivos" />
+                        <Preventivos />
                     </MainLayout>
                 }
             />
@@ -120,19 +133,22 @@ function App() {
                 path="/mantenimiento/correctivos"
                 element={
                     <MainLayout>
-                        <SimplePage title="Mantenimientos correctivos" />
+                        <Correctivos />
                     </MainLayout>
                 }
             />
 
-
             {/* Activos */}
+
+            {/* ================================
+                ACTIVOS
+            ================================= */}
 
             <Route
                 path="/activos/inventario"
                 element={
                     <MainLayout>
-                        <SimplePage title="Inventario de activos" />
+                        <Inventario />
                     </MainLayout>
                 }
             />
@@ -141,7 +157,7 @@ function App() {
                 path="/activos/computadoras"
                 element={
                     <MainLayout>
-                        <SimplePage title="Computadoras" />
+                        <Computadoras />
                     </MainLayout>
                 }
             />
@@ -150,7 +166,7 @@ function App() {
                 path="/activos/equipos-biomedicos"
                 element={
                     <MainLayout>
-                        <SimplePage title="Equipos biomédicos" />
+                        <EquiposBiomedicos />
                     </MainLayout>
                 }
             />
@@ -159,7 +175,7 @@ function App() {
                 path="/activos/camaras"
                 element={
                     <MainLayout>
-                        <SimplePage title="Cámaras" />
+                        <Camaras />
                     </MainLayout>
                 }
             />
@@ -168,7 +184,7 @@ function App() {
                 path="/activos/impresoras"
                 element={
                     <MainLayout>
-                        <SimplePage title="Impresoras" />
+                        <Impresoras />
                     </MainLayout>
                 }
             />
@@ -177,7 +193,7 @@ function App() {
                 path="/activos/equipos-red"
                 element={
                     <MainLayout>
-                        <SimplePage title="Equipos de red" />
+                        <EquiposRed />
                     </MainLayout>
                 }
             />

@@ -1,0 +1,41 @@
+@use "../../styles/variables" as *;
+
+.insignia-estado {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.estado-pendiente {
+    background-color: rgba(254, 204, 0, 0.18);
+    color: #856404;
+}
+
+.estado-asignada {
+    background-color: rgba(12, 120, 189, 0.12);
+    color: $support-blue;
+}
+
+.estado-en-curso {
+    background-color: rgba(12, 120, 189, 0.18);
+    color: $support-dark;
+}
+
+.estado-en-espera {
+    background-color: rgba(108, 117, 125, 0.15);
+    color: $gray-700;
+}
+
+.estado-resuelta {
+    background-color: rgba(21, 147, 54, 0.15);
+    color: $success;
+}
+
+.estado-cerrada {
+    background-color: rgba(108, 117, 125, 0.12);
+    color: $gray-700;
+}
