@@ -413,6 +413,18 @@ const Sidebar = ({
 
 
                     <NavLink
+                        to="/usuarios"
+                        className="menu-item"
+                        onClick={handleNavigation}
+                    >
+                        <i className="bi bi-people"></i>
+
+                        <span>
+                            Personal
+                        </span>
+                    </NavLink>
+
+                    <NavLink
                         to="/configuracion"
                         className="menu-item"
                         onClick={handleNavigation}

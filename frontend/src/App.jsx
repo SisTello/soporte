@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+import ProtectedRoute from './app/routes/ProtectedRoute';
 import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
 
@@ -18,250 +19,253 @@ import EquiposBiomedicos from './pages/activos/EquiposBiomedicos';
 import Camaras from './pages/activos/Camaras';
 import Impresoras from './pages/activos/Impresoras';
 import EquiposRed from './pages/activos/EquiposRed';
+import Repuestos from './pages/repuestos/Repuestos';
+import Conocimiento from './pages/conocimiento/Conocimiento';
+import Reportes from './pages/reportes/Reportes';
+import Configuracion from './pages/configuracion/Configuracion';
+import Usuarios from './pages/usuarios/Usuarios';
 
-const SimplePage = ({ title }) => {
+import { useAuthStore } from './shared/store/useAuthStore';
 
-    return (
-        <div className="container-fluid p-4">
-
-            <h1>{title}</h1>
-
-            <p className="text-muted">
-                Esta sección será desarrollada posteriormente.
-            </p>
-
-        </div>
-    );
+const PublicRoute = ({ children }) => {
+    const user = useAuthStore((state) => state.user);
+    return user ? <Navigate to="/inicio" replace /> : children;
 };
 
-
 function App() {
+    const user = useAuthStore((state) => state.user);
 
     return (
-
         <Routes>
-
-            {/* ================================
-                LOGIN
-            ================================= */}
-
             <Route
                 path="/login"
                 element={
-                    <AuthLayout>
-                        <Login />
-                    </AuthLayout>
+                    <PublicRoute>
+                        <AuthLayout>
+                            <Login />
+                        </AuthLayout>
+                    </PublicRoute>
                 }
             />
 
-
-            {/* ================================
-                SISTEMA
-            ================================= */}
-
             <Route
-                element={
-                    <MainLayout>
-                        <Dashboard />
-                    </MainLayout>
-                }
                 path="/inicio"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Dashboard />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
             />
 
-
-            {/* Solicitudes */}
-
             <Route
-              path="/solicitudes/nueva"
-              element={
-                  <MainLayout>
-                      <NuevaSolicitud />
-                  </MainLayout>
-              }
-          />
+                path="/solicitudes/nueva"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <NuevaSolicitud />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
 
             <Route
                 path="/solicitudes/mis-solicitudes"
                 element={
-                    <MainLayout>
-                        <MisSolicitudes />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <MisSolicitudes />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/solicitudes/todas"
                 element={
-                    <MainLayout>
-                        <TodasSolicitudes />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <TodasSolicitudes />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
-
-            {/* Mantenimiento */}
-
-           
             <Route
                 path="/mantenimiento/planificacion"
                 element={
-                    <MainLayout>
-                        <Planificacion />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Planificacion />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/mantenimiento"
                 element={
-                    <MainLayout>
-                        <Mantenimientos />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Mantenimientos />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/mantenimiento/preventivos"
                 element={
-                    <MainLayout>
-                        <Preventivos />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Preventivos />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/mantenimiento/correctivos"
                 element={
-                    <MainLayout>
-                        <Correctivos />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Correctivos />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
-
-            {/* Activos */}
-
-            {/* ================================
-                ACTIVOS
-            ================================= */}
 
             <Route
                 path="/activos/inventario"
                 element={
-                    <MainLayout>
-                        <Inventario />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Inventario />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/activos/computadoras"
                 element={
-                    <MainLayout>
-                        <Computadoras />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Computadoras />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/activos/equipos-biomedicos"
                 element={
-                    <MainLayout>
-                        <EquiposBiomedicos />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <EquiposBiomedicos />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/activos/camaras"
                 element={
-                    <MainLayout>
-                        <Camaras />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Camaras />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/activos/impresoras"
                 element={
-                    <MainLayout>
-                        <Impresoras />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Impresoras />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/activos/equipos-red"
                 element={
-                    <MainLayout>
-                        <EquiposRed />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <EquiposRed />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
-
-
-            {/* Otros módulos */}
 
             <Route
                 path="/repuestos"
                 element={
-                    <MainLayout>
-                        <SimplePage title="Repuestos e insumos" />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Repuestos />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/conocimiento"
                 element={
-                    <MainLayout>
-                        <SimplePage title="Base de conocimiento" />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Conocimiento />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/reportes"
                 element={
-                    <MainLayout>
-                        <SimplePage title="Reportes" />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Reportes />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
             <Route
                 path="/configuracion"
                 element={
-                    <MainLayout>
-                        <SimplePage title="Configuración" />
-                    </MainLayout>
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Configuracion />
+                        </MainLayout>
+                    </ProtectedRoute>
                 }
             />
 
-
-            {/* ================================
-                REDIRECCIONES
-            ================================= */}
+            <Route
+                path="/usuarios"
+                element={
+                    <ProtectedRoute>
+                        <MainLayout>
+                            <Usuarios />
+                        </MainLayout>
+                    </ProtectedRoute>
+                }
+            />
 
             <Route
                 path="/"
-                element={
-                    <Navigate
-                        to="/login"
-                        replace
-                    />
-                }
+                element={<Navigate to={user ? '/inicio' : '/login'} replace />}
             />
 
             <Route
                 path="*"
-                element={
-                    <Navigate
-                        to="/login"
-                        replace
-                    />
-                }
+                element={<Navigate to={user ? '/inicio' : '/login'} replace />}
             />
-
         </Routes>
     );
 }

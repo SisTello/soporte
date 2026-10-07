@@ -4,10 +4,13 @@ import { activos } from '../../datos/activos';
 
 import './TablaActivos.scss';
 
+const normalizeText = (value, fallback = '') => String(value ?? fallback).trim();
+
 const TablaActivos = ({
     titulo,
     descripcion,
     categoria = null,
+    datos = activos,
 }) => {
 
     const [busqueda, setBusqueda] = useState('');
@@ -16,28 +19,35 @@ const TablaActivos = ({
 
     const registros = useMemo(() => {
 
-        const texto = busqueda.trim().toLowerCase();
+        const texto = normalizeText(busqueda).toLowerCase();
 
-        return activos.filter((activo) => {
+        return (Array.isArray(datos) ? datos : []).filter((activo) => {
+            const codigo = normalizeText(activo?.codigo);
+            const nombre = normalizeText(activo?.nombre);
+            const marca = normalizeText(activo?.marca);
+            const responsable = normalizeText(activo?.responsable);
+            const estadoActivo = normalizeText(activo?.estado, 'Operativo');
+            const categoriaActivo = normalizeText(activo?.categoria);
+            const sucursalActivo = normalizeText(activo?.sucursal);
 
             const coincideCategoria =
                 !categoria ||
-                activo.categoria === categoria;
+                categoriaActivo === categoria;
 
             const coincideEstado =
                 estado === 'Todos' ||
-                activo.estado === estado;
+                estadoActivo === estado;
 
             const coincideSucursal =
                 sucursal === 'Todas' ||
-                activo.sucursal === sucursal;
+                sucursalActivo === sucursal;
 
             const coincideBusqueda =
                 !texto ||
-                activo.codigo.toLowerCase().includes(texto) ||
-                activo.nombre.toLowerCase().includes(texto) ||
-                activo.marca.toLowerCase().includes(texto) ||
-                activo.responsable.toLowerCase().includes(texto);
+                codigo.toLowerCase().includes(texto) ||
+                nombre.toLowerCase().includes(texto) ||
+                marca.toLowerCase().includes(texto) ||
+                responsable.toLowerCase().includes(texto);
 
             return (
                 coincideCategoria &&
@@ -52,6 +62,7 @@ const TablaActivos = ({
         estado,
         sucursal,
         categoria,
+        datos,
     ]);
 
     const total = registros.length;
@@ -315,74 +326,69 @@ const TablaActivos = ({
 
                             <tbody>
 
-                                {registros.map((activo) => (
+                                {registros.map((activo, index) => {
+                                    const estadoActivo = normalizeText(activo?.estado, 'Operativo');
+                                    const codigo = normalizeText(activo?.codigo);
+                                    const nombre = normalizeText(activo?.nombre);
+                                    const departamento = normalizeText(activo?.departamento, 'Tecnología');
+                                    const categoriaActivo = normalizeText(activo?.categoria, 'Sin categoría');
+                                    const marca = normalizeText(activo?.marca, 'Sin marca');
+                                    const responsable = normalizeText(activo?.responsable, 'Sin responsable');
+                                    const ubicacion = normalizeText(activo?.ubicacion, 'Sin ubicación');
+                                    const sucursalActivo = normalizeText(activo?.sucursal, 'Sin sucursal');
+                                    const rowKey = activo?.id ?? `${codigo || 'sin-codigo'}-${index}`;
 
-                                    <tr key={activo.id}>
-
-                                        <td>
-
-                                            <span className="activo-codigo">
-                                                {activo.codigo}
-                                            </span>
-
-                                        </td>
-
-
-                                        <td>
-
-                                            <strong>
-                                                {activo.nombre}
-                                            </strong>
-
-                                            <small>
-                                                {activo.departamento}
-                                            </small>
-
-                                        </td>
-
-
-                                        {!categoria && (
+                                    return (
+                                        <tr key={rowKey}>
                                             <td>
-                                                {activo.categoria}
+                                                <span className="activo-codigo">
+                                                    {codigo || 'Sin código'}
+                                                </span>
                                             </td>
-                                        )}
 
+                                            <td>
+                                                <strong>
+                                                    {nombre || 'Sin nombre'}
+                                                </strong>
+                                                <small>
+                                                    {departamento}
+                                                </small>
+                                            </td>
 
-                                        <td>
-                                            {activo.marca}
-                                        </td>
+                                            {!categoria && (
+                                                <td>
+                                                    {categoriaActivo}
+                                                </td>
+                                            )}
 
+                                            <td>
+                                                {marca}
+                                            </td>
 
-                                        <td>
-                                            {activo.responsable}
-                                        </td>
+                                            <td>
+                                                {responsable}
+                                            </td>
 
+                                            <td>
+                                                {ubicacion}
+                                            </td>
 
-                                        <td>
-                                            {activo.ubicacion}
-                                        </td>
+                                            <td>
+                                                {sucursalActivo}
+                                            </td>
 
-
-                                        <td>
-                                            {activo.sucursal}
-                                        </td>
-
-
-                                        <td>
-
-                                            <span
-                                                className={`activo-estado estado-${activo.estado
-                                                    .toLowerCase()
-                                                    .replaceAll(' ', '-')}`}
-                                            >
-                                                {activo.estado}
-                                            </span>
-
-                                        </td>
-
-                                    </tr>
-
-                                ))}
+                                            <td>
+                                                <span
+                                                    className={`activo-estado estado-${estadoActivo
+                                                        .toLowerCase()
+                                                        .replaceAll(' ', '-')}`}
+                                                >
+                                                    {estadoActivo}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
 
                             </tbody>
 

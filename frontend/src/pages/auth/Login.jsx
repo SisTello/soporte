@@ -1,33 +1,33 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useAuthStore } from '../../shared/store/useAuthStore';
+
 import './Login.scss';
 
 const Login = () => {
-
     const navigate = useNavigate();
+    const login = useAuthStore((state) => state.login);
+    const status = useAuthStore((state) => state.status);
+    const error = useAuthStore((state) => state.error);
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('admin');
+    const [password, setPassword] = useState('admin123');
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Por ahora simulamos autenticación.
-        // Más adelante esto será reemplazado por una llamada al backend.
-
-        if (!username || !password) {
-            return;
+        try {
+            await login({ username, password });
+            navigate('/inicio', { replace: true });
+        } catch {
+            // Error handled by the store and displayed below the form.
         }
-
-        navigate('/inicio');
     };
 
     return (
         <div className="login-page">
-
-            {/* Fondo decorativo */}
             <div className="login-background">
                 <span></span>
                 <span></span>
@@ -36,12 +36,8 @@ const Login = () => {
             </div>
 
             <div className="login-container">
-
                 <div className="login-card">
-
-                    {/* Logo */}
                     <div className="login-header">
-
                         <div className="login-logo">
                             <i className="bi bi-tools"></i>
                         </div>
@@ -51,20 +47,12 @@ const Login = () => {
                         <p>
                             Servicio de Soporte y Mantenimiento
                         </p>
-
                     </div>
 
-                    {/* Formulario */}
                     <form onSubmit={handleSubmit}>
-
                         <div className="form-group">
-
-                            <label htmlFor="username">
-                                Usuario
-                            </label>
-
+                            <label htmlFor="username">Usuario</label>
                             <div className="input-group">
-
                                 <span className="input-group-text">
                                     <i className="bi bi-person"></i>
                                 </span>
@@ -75,23 +63,14 @@ const Login = () => {
                                     className="form-control"
                                     placeholder="Ingrese su usuario"
                                     value={username}
-                                    onChange={(event) =>
-                                        setUsername(event.target.value)
-                                    }
+                                    onChange={(event) => setUsername(event.target.value)}
                                 />
-
                             </div>
-
                         </div>
 
                         <div className="form-group">
-
-                            <label htmlFor="password">
-                                Contraseña
-                            </label>
-
+                            <label htmlFor="password">Contraseña</label>
                             <div className="input-group">
-
                                 <span className="input-group-text">
                                     <i className="bi bi-lock"></i>
                                 </span>
@@ -102,57 +81,37 @@ const Login = () => {
                                     className="form-control"
                                     placeholder="Ingrese su contraseña"
                                     value={password}
-                                    onChange={(event) =>
-                                        setPassword(event.target.value)
-                                    }
+                                    onChange={(event) => setPassword(event.target.value)}
                                 />
 
                                 <button
                                     type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={() =>
-                                        setShowPassword(!showPassword)
-                                    }
+                                    onClick={() => setShowPassword(!showPassword)}
                                 >
-                                    <i
-                                        className={
-                                            showPassword
-                                                ? 'bi bi-eye-slash'
-                                                : 'bi bi-eye'
-                                        }
-                                    ></i>
+                                    <i className={showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'}></i>
                                 </button>
-
                             </div>
-
                         </div>
 
-                        <button
-                            type="submit"
-                            className="btn btn-login w-100"
-                        >
-                            <i className="bi bi-box-arrow-in-right me-2"></i>
-                            Ingresar
-                        </button>
+                        {error && (
+                            <div className="alert alert-danger py-2 small mb-3" role="alert">
+                                {error}
+                            </div>
+                        )}
 
+                        <button type="submit" className="btn btn-login w-100" disabled={status === 'loading'}>
+                            <i className="bi bi-box-arrow-in-right me-2"></i>
+                            {status === 'loading' ? 'Ingresando...' : 'Ingresar'}
+                        </button>
                     </form>
 
                     <div className="login-footer">
-
-                        <span>
-                            Soporte y Mantenimiento
-                        </span>
-
-                        <small>
-                            Sistema corporativo
-                        </small>
-
+                        <span>Soporte y Mantenimiento</span>
+                        <small>Sistema corporativo</small>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     );
 };

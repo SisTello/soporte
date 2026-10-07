@@ -7,12 +7,15 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import './styles/main.scss';
 
+import AppProviders from './app/providers/AppProviders';
 import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <AppProviders>
+        <App />
+      </AppProviders>
     </BrowserRouter>
   </React.StrictMode>
 );
