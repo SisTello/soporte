@@ -54,9 +54,11 @@ const mockEndpoints = {
 
         if (search) {
             items = items.filter((request) => {
-                const hayTitulo = request.titulo.toLowerCase().includes(search);
-                const hayId = String(request.id).includes(search);
-                return hayTitulo || hayId;
+                return String(
+                    request.titulo ?? ''
+                )
+                    .toLowerCase()
+                    .includes(search);
             });
         }
 
@@ -78,23 +80,178 @@ const mockEndpoints = {
 
         const payload = {
             id: Date.now(),
-            titulo: body?.titulo ?? 'Nueva solicitud',
-            categoria: body?.categoria ?? 'Software',
-            prioridad: body?.prioridad ?? 'Media',
-            estado: 'Pendiente',
-            solicitante: body?.solicitante ?? 'Usuario actual',
-            departamento: body?.departamento ?? 'Tecnología',
-            sucursal: body?.sucursal ?? 'Sucursal Central',
-            tecnico: null,
-            fecha: new Date().toLocaleDateString('es-MX'),
-            hora: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
-            descripcion: body?.descripcion ?? 'Solicitud creada desde la interfaz.',
+
+            titulo:
+                body?.titulo ??
+                'Nueva solicitud',
+
+            categoria:
+                body?.categoria ??
+                'Software',
+
+            prioridad:
+                body?.prioridad ??
+                'Media',
+
+            estado:
+                'Pendiente',
+
+            solicitante:
+                body?.solicitante ??
+                'Usuario actual',
+
+            departamento:
+                body?.departamento ??
+                'Tecnología',
+
+            sucursal:
+                body?.sucursal ??
+                'Sucursal Central',
+
+            ubicacion:
+                body?.ubicacion ??
+                '',
+
+            tipoActivo:
+                body?.tipoActivo ??
+                '',
+
+            codigoActivo:
+                body?.codigoActivo ??
+                '',
+
+            disponibilidad:
+                body?.disponibilidad ??
+                '',
+
+            tecnico:
+                null,
+
+            fecha:
+                new Date().toLocaleDateString('es-MX'),
+
+            hora:
+                new Date().toLocaleTimeString(
+                    'es-MX',
+                    {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    }
+                ),
+
+            descripcion:
+                body?.descripcion ??
+                'Solicitud creada desde la interfaz.',
         };
 
         solicitudes.unshift(payload);
 
-        return { item: payload };
+        return {
+            item: payload,
+        };
     },
+
+    '/requests/:id/verify': async ({ body }) => {
+        await sleep(350);
+
+        const pathId = Number(
+            String(body?.requestId ?? '')
+        );
+
+        /*
+        * En el mock el ID se obtiene desde la URL.
+        * La implementación real deberá recibirlo
+        * directamente desde el backend.
+        */
+
+        const solicitud = solicitudes.find(
+            (item) =>
+                item.id === pathId
+        );
+
+        if (!solicitud) {
+            throw new ApiError(
+                'Solicitud no encontrada.',
+                404
+            );
+        }
+
+        const activo = activos.find(
+            (item) =>
+                item.id === Number(body?.activoId)
+        );
+
+        if (!activo) {
+            throw new ApiError(
+                'El activo seleccionado no existe.',
+                404
+            );
+        }
+
+        solicitud.estado = 'Asignada';
+
+        solicitud.prioridad =
+            body?.prioridad ??
+            solicitud.prioridad;
+
+        solicitud.activoId =
+            activo.id;
+
+        solicitud.codigoActivo =
+            activo.codigo;
+
+        solicitud.tipoActivo =
+            activo.categoria;
+
+        solicitud.ubicacion =
+            activo.ubicacion;
+
+        return {
+            item: solicitud,
+        };
+    },
+
+    '/requests/:id/cancel': async ({ body }) => {
+        await sleep(350);
+
+        const requestId =
+            Number(body?.requestId);
+
+        const solicitud =
+            solicitudes.find(
+                (item) =>
+                    item.id === requestId
+            );
+
+        if (!solicitud) {
+            throw new ApiError(
+                'Solicitud no encontrada.',
+                404
+            );
+        }
+
+        const motivo =
+            String(
+                body?.motivoAnulacion ?? ''
+            ).trim();
+
+        if (!motivo) {
+            throw new ApiError(
+                'El motivo de anulación es obligatorio.',
+                400
+            );
+        }
+
+        solicitud.estado = 'Anulada';
+
+        solicitud.motivoAnulacion =
+            motivo;
+
+        return {
+            item: solicitud,
+        };
+    },
+
     '/assets': async ({ query }) => {
         const search = String(query?.search ?? '').trim().toLowerCase();
         const status = query?.status ?? 'Todos';
@@ -153,10 +310,54 @@ export const request = async ({
 }) => {
     const targetUrl = String(url || '/').startsWith('/') ? String(url || '/') : `/${String(url || '/')}`;
 
-    if (mockMode && mockEndpoints[targetUrl]) {
+    if (mockMode) {
         const payload = await readJsonBody(body);
-        return mockEndpoints[targetUrl]({ body: payload, query, method });
+
+        if (mockEndpoints[targetUrl]) {
+            return mockEndpoints[targetUrl]({
+                body: payload,
+                query,
+                method,
+                url: targetUrl,
+            });
+        }
+
+        const verifyMatch =
+            targetUrl.match(
+                /^\/requests\/(\d+)\/verify$/
+            );
+
+        if (verifyMatch) {
+            return mockEndpoints['/requests/:id/verify']({
+                body: {
+                    ...payload,
+                    requestId: verifyMatch[1],
+                },
+                query,
+                method,
+                url: targetUrl,
+            });
+        }
+
+        const cancelMatch =
+            targetUrl.match(
+                /^\/requests\/(\d+)\/cancel$/
+            );
+
+        if (cancelMatch) {
+            return mockEndpoints['/requests/:id/cancel']({
+                body: {
+                    ...payload,
+                    requestId: cancelMatch[1],
+                },
+                query,
+                method,
+                url: targetUrl,
+            });
+        }
     }
+
+    
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);

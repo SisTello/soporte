@@ -2,6 +2,7 @@ import { apiClient } from '../../../shared/api/httpClient';
 import { requestMapper } from '../utils/requestMapper';
 
 export const requestsService = {
+
     async list(filters = {}) {
         const response = await apiClient.request({
             url: '/requests',
@@ -14,18 +15,73 @@ export const requestsService = {
         });
 
         return {
-            items: (response?.items ?? []).map(requestMapper.fromApi),
+            items: (response?.items ?? []).map(
+                requestMapper.fromApi
+            ),
+
             total: response?.total ?? 0,
         };
     },
+
 
     async create(payload) {
         const result = await apiClient.request({
             url: '/requests/create',
             method: 'POST',
+
             body: requestMapper.toApi(payload),
         });
 
-        return requestMapper.fromApi(result?.item ?? payload);
+        return requestMapper.fromApi(
+            result?.item ?? payload
+        );
+    },
+
+
+    /*
+     * Verificar solicitud y asociar activo
+     */
+
+    async verify(requestId, payload) {
+        const result = await apiClient.request({
+            url: `/requests/${requestId}/verify`,
+            method: 'POST',
+
+            body: {
+                prioridad: payload.prioridad,
+
+                codigoActivo: payload.codigoActivo,
+
+                tipoActivo: payload.tipoActivo,
+
+                ubicacion: payload.ubicacion,
+
+                activoId: payload.activoId,
+            },
+        });
+
+        return requestMapper.fromApi(
+            result?.item ?? {}
+        );
+    },
+
+
+    /*
+     * Anular solicitud
+     */
+
+    async cancel(requestId, motivo) {
+        const result = await apiClient.request({
+            url: `/requests/${requestId}/cancel`,
+            method: 'POST',
+
+            body: {
+                motivoAnulacion: motivo,
+            },
+        });
+
+        return requestMapper.fromApi(
+            result?.item ?? {}
+        );
     },
 };

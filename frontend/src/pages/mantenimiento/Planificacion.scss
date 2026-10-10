@@ -349,91 +349,115 @@
     }
 }
 
-.agenda {
-    border: 1px solid $gray-200;
-    border-radius: $border-radius;
-    background: $white;
-    overflow: hidden;
-}
-
-.agenda-titulo {
-    padding: 16px 20px;
-    border-bottom: 1px solid $gray-200;
-    color: $gray-900;
-    font-weight: 600;
-
-    i {
-        margin-right: 8px;
-        color: $support-blue;
-    }
-}
-
-.agenda-item {
+.schedule-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 18px 20px;
-    border-bottom: 1px solid $gray-200;
-
-    &:last-child {
-        border-bottom: none;
-    }
+    justify-content: center;
+    padding: 20px;
+    background: rgba(14, 24, 38, 0.5);
 }
 
-.agenda-fecha {
-    width: 130px;
+.schedule-modal {
+    width: min(760px, 100%);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    border: 1px solid $gray-200;
+    border-radius: 14px;
+    background: $white;
+    box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24);
+}
 
-    strong {
-        display: block;
-        color: $gray-900;
-        font-size: 13px;
-    }
+.schedule-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    border-bottom: 1px solid $gray-200;
 
     span {
         color: $support-blue;
         font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    h2 {
+        margin: 4px 0 0;
+        color: $gray-900;
+        font-size: 20px;
+    }
+}
+
+.schedule-modal__close {
+    width: 36px;
+    height: 36px;
+    border: 1px solid $gray-200;
+    border-radius: 50%;
+    background: $white;
+    color: $gray-700;
+    cursor: pointer;
+
+    &:hover {
+        background: $gray-100;
+    }
+}
+
+.schedule-modal__body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 22px;
+
+    label {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        color: $gray-700;
+        font-size: 12px;
         font-weight: 600;
     }
-}
 
-.agenda-contenido {
-    flex: 1;
-
-    h3 {
-        margin: 0;
+    input,
+    select,
+    textarea {
+        width: 100%;
+        min-height: 40px;
+        padding: 9px 11px;
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+        outline: none;
+        background: $white;
         color: $gray-900;
-        font-size: 15px;
+        font: inherit;
+        font-weight: 400;
+
+        &:focus {
+            border-color: $support-blue;
+            box-shadow: 0 0 0 3px rgba($support-blue, 0.1);
+        }
     }
 
-    p {
-        margin: 3px 0 8px;
-        color: $gray-500;
-        font-size: 12px;
-    }
-
-    div {
-        display: flex;
-        gap: 15px;
-
-        span {
-            color: $gray-500;
-            font-size: 11px;
-        }
-
-        i {
-            color: $support-blue;
-            margin-right: 4px;
-        }
+    textarea {
+        resize: vertical;
     }
 }
 
-.agenda-estado {
-    padding: 5px 9px;
-    border-radius: 20px;
-    background: rgba(254, 204, 0, 0.15);
-    color: #806600;
-    font-size: 11px;
-    font-weight: 600;
+.schedule-modal__full-width {
+    grid-column: 1 / -1;
+}
+
+.schedule-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 22px;
+    border-top: 1px solid $gray-200;
+    background: $gray-100;
 }
 
 @media (max-width: 1024px) {
@@ -456,6 +480,36 @@
 
     .planificacion-resumen {
         grid-template-columns: 1fr;
+    }
+
+    .schedule-modal-backdrop {
+        padding: 10px;
+    }
+
+    .schedule-modal {
+        max-height: calc(100dvh - 20px);
+    }
+
+    .schedule-modal__body {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+
+    .schedule-modal__full-width {
+        grid-column: auto;
+    }
+
+    .schedule-modal__header,
+    .schedule-modal__footer {
+        padding: 16px;
+    }
+
+    .schedule-modal__footer {
+        flex-direction: column-reverse;
+
+        .btn {
+            width: 100%;
+        }
     }
 
     .calendar-filters {

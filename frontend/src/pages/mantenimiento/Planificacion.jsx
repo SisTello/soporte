@@ -1,5 +1,6 @@
 ﻿import { useMemo, useState } from 'react';
 
+import { activos } from '../../datos/activos';
 import { mantenimientos } from '../../datos/mantenimientos';
 
 import './Planificacion.scss';
@@ -16,6 +17,17 @@ const eventLabels = {
     preventivo: 'Preventivo',
     correctivo: 'Correctivo',
 };
+
+const createEmptyScheduleForm = () => ({
+    codigo: '',
+    numeroInventarioContable: '',
+    sucursal: '',
+    departamento: '',
+    ubicacion: '',
+    descripcionTrabajo: '',
+    fechaProgramada: '',
+    tipo: 'Preventivo',
+});
 
 const parseFecha = (fechaTexto) => {
     const [dia, mes, anio] = fechaTexto.split('/').map(Number);
@@ -65,6 +77,9 @@ const Planificacion = () => {
     const today = new Date();
     const [currentDate, setCurrentDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [showScheduleModal, setShowScheduleModal] = useState(false);
+    const [scheduleForm, setScheduleForm] = useState(createEmptyScheduleForm);
+    const [scheduledMaintenance, setScheduledMaintenance] = useState(mantenimientos);
     const [filters, setFilters] = useState({
         preventivo: true,
         correctivo: true,
@@ -74,8 +89,8 @@ const Planificacion = () => {
     const month = currentDate.getMonth();
 
     const programados = useMemo(
-        () => mantenimientos.filter((mantenimiento) => mantenimiento.estado === 'Programado'),
-        []
+        () => scheduledMaintenance.filter((mantenimiento) => mantenimiento.estado === 'Programado'),
+        [scheduledMaintenance]
     );
 
     const calendarEvents = useMemo(
@@ -125,6 +140,49 @@ const Planificacion = () => {
         return eventDate.getMonth() === month && eventDate.getFullYear() === year;
     }).length;
 
+    const handleScheduleSubmit = (event) => {
+        event.preventDefault();
+
+        const [yearValue, monthValue, dayValue] = scheduleForm.fechaProgramada.split('-');
+        const fechaProgramada = `${dayValue}/${monthValue}/${yearValue}`;
+        const newMaintenance = {
+            id: Date.now(),
+            activo: scheduleForm.codigo,
+            codigo: scheduleForm.codigo,
+            numeroInventarioContable: scheduleForm.numeroInventarioContable,
+            sucursal: scheduleForm.sucursal,
+            departamento: scheduleForm.departamento,
+            ubicacion: scheduleForm.ubicacion,
+            descripcionTrabajo: scheduleForm.descripcionTrabajo,
+            fechaProgramada,
+            tipo: scheduleForm.tipo,
+            categoria: scheduleForm.tipo,
+            tecnico: 'Sin asignar',
+            estado: 'Programado',
+            prioridad: 'Media',
+        };
+
+        setScheduledMaintenance((current) => [newMaintenance, ...current]);
+        setCurrentDate(new Date(Number(yearValue), Number(monthValue) - 1, 1));
+        setScheduleForm(createEmptyScheduleForm());
+        setShowScheduleModal(false);
+    };
+
+    const handleAssetCodeChange = (codigo) => {
+        const selectedAsset = activos.find(
+            (asset) => asset.codigo.toLowerCase() === codigo.trim().toLowerCase()
+        );
+
+        setScheduleForm((current) => ({
+            ...current,
+            codigo,
+            numeroInventarioContable: selectedAsset?.numeroInventarioContable ?? '',
+            sucursal: selectedAsset?.sucursal ?? '',
+            departamento: selectedAsset?.departamento ?? '',
+            ubicacion: selectedAsset?.ubicacion ?? '',
+        }));
+    };
+
     return (
         <div className="planificacion-pagina">
             <div className="encabezado-mantenimiento">
@@ -134,7 +192,11 @@ const Planificacion = () => {
                     <p>Consulta y gestiona las programaciones del calendario mensual.</p>
                 </div>
 
-                <button type="button" className="btn boton-planificar">
+                <button
+                    type="button"
+                    className="btn boton-planificar"
+                    onClick={() => setShowScheduleModal(true)}
+                >
                     <i className="bi bi-plus-lg" />
                     Programar mantenimiento
                 </button>
@@ -284,39 +346,124 @@ const Planificacion = () => {
                 </div>
             )}
 
-            <div className="agenda mt-4">
-                <div className="agenda-titulo">
-                    <i className="bi bi-calendar3" />
-                    Próximos mantenimientos
-                </div>
-
-                {programados.map((mantenimiento) => (
-                    <div className="agenda-item" key={mantenimiento.id}>
-                        <div className="agenda-fecha">
-                            <strong>{mantenimiento.fechaProgramada}</strong>
-                            <span>{mantenimiento.tipo}</span>
-                        </div>
-
-                        <div className="agenda-contenido">
-                            <h3>{mantenimiento.activo}</h3>
-                            <p>{mantenimiento.categoria}</p>
-
+            {showScheduleModal && (
+                <div className="schedule-modal-backdrop" onClick={() => setShowScheduleModal(false)}>
+                    <section
+                        className="schedule-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="schedule-modal-title"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <header className="schedule-modal__header">
                             <div>
-                                <span>
-                                    <i className="bi bi-person" />
-                                    {mantenimiento.tecnico}
-                                </span>
-                                <span>
-                                    <i className="bi bi-building" />
-                                    {mantenimiento.sucursal}
-                                </span>
+                                <span>Agenda técnica</span>
+                                <h2 id="schedule-modal-title">Programar mantenimiento</h2>
                             </div>
-                        </div>
+                            <button
+                                type="button"
+                                className="schedule-modal__close"
+                                onClick={() => setShowScheduleModal(false)}
+                                aria-label="Cerrar formulario"
+                            >
+                                <i className="bi bi-x-lg" />
+                            </button>
+                        </header>
 
-                        <span className="agenda-estado">Programado</span>
-                    </div>
-                ))}
-            </div>
+                        <form onSubmit={handleScheduleSubmit}>
+                            <div className="schedule-modal__body">
+                                <label>
+                                    Código de activo
+                                    <input
+                                        value={scheduleForm.codigo}
+                                        list="schedule-asset-options"
+                                        onChange={(event) => handleAssetCodeChange(event.target.value)}
+                                        required
+                                    />
+                                    <datalist id="schedule-asset-options">
+                                        {activos.map((asset) => (
+                                            <option
+                                                key={asset.id}
+                                                value={asset.codigo}
+                                                label={`${asset.nombre} · ${asset.numeroInventarioContable}`}
+                                            />
+                                        ))}
+                                    </datalist>
+                                </label>
+                                <label>
+                                    Número de inventario
+                                    <input
+                                        value={scheduleForm.numeroInventarioContable}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, numeroInventarioContable: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    Sucursal
+                                    <input
+                                        value={scheduleForm.sucursal}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, sucursal: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    Departamento
+                                    <input
+                                        value={scheduleForm.departamento}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, departamento: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    Localización
+                                    <input
+                                        value={scheduleForm.ubicacion}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, ubicacion: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    Fecha de programación
+                                    <input
+                                        type="date"
+                                        value={scheduleForm.fechaProgramada}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, fechaProgramada: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                                <label>
+                                    Tipo de mantenimiento
+                                    <select
+                                        value={scheduleForm.tipo}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, tipo: event.target.value }))}
+                                    >
+                                        <option value="Preventivo">Preventivo</option>
+                                        <option value="Correctivo">Correctivo</option>
+                                    </select>
+                                </label>
+                                <label className="schedule-modal__full-width">
+                                    Descripción del trabajo
+                                    <textarea
+                                        rows={3}
+                                        value={scheduleForm.descripcionTrabajo}
+                                        onChange={(event) => setScheduleForm((current) => ({ ...current, descripcionTrabajo: event.target.value }))}
+                                        required
+                                    />
+                                </label>
+                            </div>
+
+                            <footer className="schedule-modal__footer">
+                                <button type="button" className="btn btn-outline-secondary" onClick={() => setShowScheduleModal(false)}>
+                                    Cancelar
+                                </button>
+                                <button type="submit" className="btn btn-primary">
+                                    Guardar planificación
+                                </button>
+                            </footer>
+                        </form>
+                    </section>
+                </div>
+            )}
         </div>
     );
 };
